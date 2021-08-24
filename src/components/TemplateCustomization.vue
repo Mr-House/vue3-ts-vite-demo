@@ -9,7 +9,7 @@
     <a-button type="primary" @click="addRow">添加检验项目</a-button>
   </div>
   <a-table
-    :data-source="dataSource"
+    :data-source="items"
     :columns="columns"
     bordered
     size="small"
@@ -32,14 +32,24 @@
       <a-button type="primary" danger @click="delRow(index)">删除</a-button>
     </template>
   </a-table>
-  <div style="text-align:center;">
-    <a-button type="primary">打印预览</a-button>
+  <div style="text-align:center;margin-top: 20px;">
+    <a-button type="primary" @click="preview">预览</a-button>
   </div>
+  <a-modal
+    v-model:visible="visible"
+    title="模版预览"
+    width="100%"
+    wrapClassName="full-modal"
+    @ok="handleOk"
+  >
+    <Preview v-if="visible" :items="items" />
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
+import Preview from './Preview.vue'
 
 
 type Key = ColumnProps['key'];
@@ -57,7 +67,9 @@ interface SelectType {
   indicator: string
 }
 
-let dataSource = reactive<DataType[]>([]);
+const visible = ref(false)
+
+let items = reactive<DataType[]>([]);
 
 const columns = reactive([
   {
@@ -103,7 +115,7 @@ const options = reactive<SelectType[]>([
   { value: 'Assay', label: '含量，%', indicator: '96.0min' },
 ])
 
-const count = computed(() => dataSource.length + 1);
+const count = computed(() => items.length + 1);
 
 const elements = reactive([
   { label: '产品名称', field: 'productName' },
@@ -116,7 +128,7 @@ const elements = reactive([
 
 
 const addRow = () => {
-  dataSource.push({
+  items.push({
     key: count.value,
     inspectionItem: '',
     indicator: '',
@@ -124,14 +136,38 @@ const addRow = () => {
   })
 }
 const delRow = (index: number) => {
-  dataSource.splice(index, 1)
+  items.splice(index, 1)
 }
 
 const handleChange = (record: DataType) => {
   const option: SelectType = options.filter(el => el.value === record.inspectionItem)[0]
   record.indicator = option ? option.indicator : ''
 }
+
+const preview = () => {
+  visible.value = true
+}
+
+const handleOk = () => {
+  visible.value = false
+}
 </script>
 
-<style>
+<style lang="less">
+.full-modal {
+  .ant-modal {
+    max-width: 100%;
+    top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+  .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh);
+  }
+  .ant-modal-body {
+    flex: 1;
+  }
+}
 </style>
