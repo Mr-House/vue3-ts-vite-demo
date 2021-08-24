@@ -9,10 +9,13 @@
     </div>
     <div>
       <a-row style="border-bottom: 1px solid;">
-        <a-col :span="6" style="text-align:center;border-right: 1px solid;">产品名称</a-col>
-        <a-col :span="18" style="text-align:center;">抗氧化剂 RIANOX 245</a-col>
+        <a-col v-for="element in elements" :span="element.span" style="text-align:center;border-right: 1px solid;border-bottom: 1px solid;">
+          <span style="width: 100px;text-align:center;">{{element.label}}</span>
+        </a-col>
+        <!-- <a-col :span="6" style="text-align:center;border-right: 1px solid;">产品名称</a-col>
+        <a-col :span="18" style="text-align:center;">抗氧化剂 RIANOX 245</a-col> -->
       </a-row>
-      <a-row style="border-bottom: 1px solid;">
+      <!-- <a-row style="border-bottom: 1px solid;">
         <a-col :span="6" style="text-align:center;border-right: 1px solid;">CAS登录号</a-col>
         <a-col :span="18" style="text-align:center;">36443-68-2</a-col>
       </a-row>
@@ -29,7 +32,7 @@
       <a-row style="border-bottom: 1px solid;">
         <a-col :span="6" style="text-align:center;border-right: 1px solid;">数量</a-col>
         <a-col :span="18" style="text-align:center;">1000kg</a-col>
-      </a-row>
+      </a-row> -->
     </div>
     <div>
       <a-row style="border-bottom: 1px solid;">
@@ -56,6 +59,10 @@ const props = defineProps({
   items: {
     type: Array,
     default: (): DataType[] => ([])
+  },
+  elements: {
+    type: Array,
+    default: () => ([])
   }
 })
 

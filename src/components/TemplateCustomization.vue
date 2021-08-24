@@ -1,8 +1,16 @@
 <template>
-  <a-form layout="inline" labelAlign="right" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }">
-    <a-form-item :label="element.label" v-for="element in elements" :key="element.field">
-      <a-input></a-input>
-    </a-form-item>
+  <a-form layout="inline">
+    <a-row>
+      <a-col v-for="element in elements" :span="element.span" :key="element.field" style="padding: 5px 0;">
+        <a-form-item>
+          <template #label>
+            <span style="width: 100px;">{{element.label}}</span>
+          </template>
+          <a-input></a-input>
+        </a-form-item>
+      </a-col>
+    </a-row>
+  
   </a-form>
 
   <div style="margin-bottom: 10px;margin-top: 30px;text-align: left;">
@@ -43,7 +51,7 @@
     wrapClassName="full-modal"
     @ok="handleOk"
   >
-    <Preview v-if="visible" :items="items" />
+    <Preview v-if="visible" :items="items" :elements="elements"/>
   </a-modal>
 </template>
 
@@ -120,12 +128,12 @@ const options = reactive<SelectType[]>([
 const count = computed(() => items.length + 1);
 
 const elements = reactive([
-  { label: '产品名称', field: 'productName' },
-  { label: 'CAS登录号', field: 'account' },
-  { label: '批号', field: 'batch' },
-  { label: '生产日期', field: 'productionDate' },
-  { label: '校验日期', field: 'validateDate' },
-  { label: '数量', field: 'amount' }
+  { label: '产品名称', field: 'productName', span: 24 },
+  { label: 'CAS登录号', field: 'account', span: 24 },
+  { label: '批号', field: 'batch', span: 24 },
+  { label: '生产日期', field: 'productionDate', span: 12 },
+  { label: '校验日期', field: 'validateDate', span: 12 },
+  { label: '数量', field: 'amount', span: 24 }
 ])
 
 
