@@ -33,6 +33,7 @@
     </template>
   </a-table>
   <div style="text-align:center;margin-top: 20px;">
+    <a-button type="primary" @click="save" style="margin-right: 5px;">保存</a-button>
     <a-button type="primary" @click="preview">预览</a-button>
   </div>
   <a-modal
@@ -47,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
 import Preview from './Preview.vue'
 
@@ -57,6 +58,7 @@ type Key = ColumnProps['key'];
 interface DataType {
   key: Key
   inspectionItem: string
+  inspectionItemName: string
   indicator: string
   inspectionResult: string
 }
@@ -131,6 +133,7 @@ const addRow = () => {
   items.push({
     key: count.value,
     inspectionItem: '',
+    inspectionItemName: '',
     indicator: '',
     inspectionResult: ''
   })
@@ -142,6 +145,7 @@ const delRow = (index: number) => {
 const handleChange = (record: DataType) => {
   const option: SelectType = options.filter(el => el.value === record.inspectionItem)[0]
   record.indicator = option ? option.indicator : ''
+  record.inspectionItemName = option ? option.label : ''
 }
 
 const preview = () => {
@@ -150,6 +154,19 @@ const preview = () => {
 
 const handleOk = () => {
   visible.value = false
+}
+
+onMounted(() => {
+  const data = localStorage.getItem('items')
+  if (data) {
+    JSON.parse(data).forEach(el => {
+      items.push({...el})
+    })
+  }
+})
+
+const save = () =>  {
+  localStorage.setItem('items', JSON.stringify(items))
 }
 </script>
 
