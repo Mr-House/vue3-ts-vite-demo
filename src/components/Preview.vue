@@ -16,7 +16,7 @@
     <div>
       <a-row style="border-bottom: 1px solid;">
         <a-col
-          v-for="(element, index) in elements"
+          v-for="(element: any, index) in elements"
           :span="element.span"
           :style="{ 'border-bottom': index !== elements.length - 1 ? '1px solid' : '', display: 'flex' }"
         >
@@ -45,7 +45,7 @@
           <span>检验结果</span>
         </a-col>
       </a-row>
-      <a-row v-for="item in items" :key="item.key" style="border-bottom: 1px solid;">
+      <a-row v-for="(item: any) in items" :key="item.key" style="border-bottom: 1px solid;">
         <a-col :span="8" style="text-align:center;border-right: 1px solid;">
           <span>{{ item.inspectionItemName }}</span>
         </a-col>
