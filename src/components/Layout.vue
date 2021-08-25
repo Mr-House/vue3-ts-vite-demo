@@ -43,7 +43,7 @@ import {
 
 const collapsed = ref(false)
 
-const selectedKeys = reactive(['1'])
+let selectedKeys = reactive(['1'])
 
 </script>
 

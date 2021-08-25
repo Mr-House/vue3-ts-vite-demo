@@ -1,7 +1,5 @@
 <template>
-  <div
-    style="margin: 0 600px;border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;"
-  >
+  <div style="margin: 0 30%;border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;">
     <div style="border-bottom: 1px solid;">
       <br />
       <div style="border-bottom: 1px solid #ded9d9;"></div>
@@ -16,7 +14,7 @@
     <div>
       <a-row style="border-bottom: 1px solid;">
         <a-col
-          v-for="(element: any, index) in elements"
+          v-for="(element, index) in elements"
           :span="element.span"
           :style="{ 'border-bottom': index !== elements.length - 1 ? '1px solid' : '', display: 'flex' }"
         >
@@ -45,7 +43,7 @@
           <span>检验结果</span>
         </a-col>
       </a-row>
-      <a-row v-for="(item: any) in items" :key="item.key" style="border-bottom: 1px solid;">
+      <a-row v-for="item in items" :key="item.key" style="border-bottom: 1px solid;">
         <a-col :span="8" style="text-align:center;border-right: 1px solid;">
           <span>{{ item.inspectionItemName }}</span>
         </a-col>
@@ -113,11 +111,11 @@ import { ColumnProps } from 'ant-design-vue/es/table/interface';
 
 const props = defineProps({
   items: {
-    type: Array,
+    type: Array as () => DataType[],
     default: (): DataType[] => ([])
   },
   elements: {
-    type: Array,
+    type: Array as () => ElementType[],
     default: () => ([])
   },
   audit: {
@@ -128,9 +126,18 @@ const props = defineProps({
 
 type Key = ColumnProps['key'];
 
+interface ElementType {
+  key: Key
+  field: string
+  label: string
+  span: number
+  content: string
+}
+
 interface DataType {
   key: Key
   inspectionItem: string
+  inspectionItemName: string
   indicator: string
   inspectionResult: string
 }
