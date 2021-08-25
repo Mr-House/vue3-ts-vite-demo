@@ -1,7 +1,7 @@
 <template>
   <a-layout
     class="layout-custom-trigger"
-    :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }"
+    :style="{ overflow: 'auto', height: '100vh', width: '100%', position: 'fixed', left: 0 }"
   >
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo"></div>
@@ -12,7 +12,7 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout :style="{ width: '100%', height: '100%' }">
+    <a-layout :style="{ width: '100%', height: '100%', overflow: 'auto' }">
       <a-layout-header :style="{ background: '#fff', padding: 0 }">
         <menu-unfold-outlined
           v-if="collapsed"
@@ -22,9 +22,9 @@
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
       </a-layout-header>
       <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
+        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: 'max-content' }"
       >
-        <div style="padding: 20px;">
+        <div style="padding: 20px;height: max-content;">
           <TemplateCustomization />
         </div>
       </a-layout-content>

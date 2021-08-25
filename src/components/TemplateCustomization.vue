@@ -1,19 +1,6 @@
 <template>
-  <a-form layout="inline">
-    <a-row>
-      <a-col v-for="element in elements" :span="element.span" :key="element.field" style="padding: 5px 0;">
-        <a-form-item>
-          <template #label>
-            <span style="width: 100px;">{{element.label}}</span>
-          </template>
-          <a-input></a-input>
-        </a-form-item>
-      </a-col>
-    </a-row>
-  
-  </a-form>
-
-  <div style="margin-bottom: 10px;margin-top: 30px;text-align: left;">
+  <Header ref="headerRef"></Header>
+  <div style="padding-bottom: 10px;padding-top: 30px;text-align: left;">
     <a-button type="primary" @click="addRow">添加检验项目</a-button>
   </div>
   <a-table
@@ -40,8 +27,15 @@
       <a-button type="primary" danger @click="delRow(index)">删除</a-button>
     </template>
   </a-table>
-  <div style="text-align:center;margin-top: 20px;">
-    <a-button type="primary" @click="save" style="margin-right: 5px;">保存</a-button>
+  <div style="padding-top: 20px;">
+    <a-form layout="inline">
+      <a-form-item label="审核人">
+        <a-input v-model:value="audit"></a-input>
+      </a-form-item>
+    </a-form>
+  </div>
+  <div style="text-align:center;padding-top: 20px;">
+    <!-- <a-button type="primary" @click="save" style="margin-right: 5px;">保存</a-button> -->
     <a-button type="primary" @click="preview">预览</a-button>
   </div>
   <a-modal
@@ -51,14 +45,15 @@
     wrapClassName="full-modal"
     @ok="handleOk"
   >
-    <Preview v-if="visible" :items="items" :elements="elements"/>
+    <Preview v-if="visible" :items="items" :elements="headerData" :audit="audit" />
   </a-modal>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
 import Preview from './Preview.vue'
+import Header from './Header.vue'
 
 
 type Key = ColumnProps['key'];
@@ -79,7 +74,59 @@ interface SelectType {
 
 const visible = ref(false)
 
-let items = reactive<DataType[]>([]);
+const audit = ref()
+
+let items = reactive<DataType[]>([
+  {
+    key: 1,
+    inspectionItem: 'Appearance',
+    inspectionItemName: '外观',
+    indicator: '白色～类白色粉末',
+    inspectionResult: '白色粉末'
+  },
+  {
+    key: 2,
+    inspectionItem: 'Melting point',
+    inspectionItemName: '熔点',
+    indicator: '77.0~81.0',
+    inspectionResult: '78.6~79.6'
+  },
+  {
+    key: 3,
+    inspectionItem: 'Volatiles',
+    inspectionItemName: '挥发分，%',
+    indicator: '0.50max',
+    inspectionResult: '0.09'
+  },
+  {
+    key: 4,
+    inspectionItem: 'Ash',
+    inspectionItemName: '灰分，%',
+    indicator: '0.10max',
+    inspectionResult: '0.01'
+  },
+  {
+    key: 5,
+    inspectionItem: 'Transmittance',
+    inspectionItemName: '透光率 425nm，%',
+    indicator: '95.0min',
+    inspectionResult: '99.7'
+  },
+  {
+    key: 6,
+    inspectionItem: 'Clarity of solution',
+    inspectionItemName: '溶清性',
+    indicator: '澄清透明',
+    inspectionResult: '澄清透明'
+  },
+  {
+    key: 7,
+    inspectionItem: 'Assay',
+    inspectionItemName: '含量，%',
+    indicator: '96.0min',
+    inspectionResult: '99.1'
+  },
+]);
 
 const columns = reactive([
   {
@@ -127,16 +174,6 @@ const options = reactive<SelectType[]>([
 
 const count = computed(() => items.length + 1);
 
-const elements = reactive([
-  { label: '产品名称', field: 'productName', span: 24 },
-  { label: 'CAS登录号', field: 'account', span: 24 },
-  { label: '批号', field: 'batch', span: 24 },
-  { label: '生产日期', field: 'productionDate', span: 12 },
-  { label: '校验日期', field: 'validateDate', span: 12 },
-  { label: '数量', field: 'amount', span: 24 }
-])
-
-
 const addRow = () => {
   items.push({
     key: count.value,
@@ -156,7 +193,12 @@ const handleChange = (record: DataType) => {
   record.inspectionItemName = option ? option.label : ''
 }
 
+
+const headerRef = ref()
+
+let headerData = ref([])
 const preview = () => {
+  headerData.value = headerRef.value.getData()
   visible.value = true
 }
 
@@ -164,18 +206,8 @@ const handleOk = () => {
   visible.value = false
 }
 
-onMounted(() => {
-  const data = localStorage.getItem('items')
-  if (data) {
-    JSON.parse(data).forEach(el => {
-      items.push({...el})
-    })
-  }
-})
 
-const save = () =>  {
-  localStorage.setItem('items', JSON.stringify(items))
-}
+
 </script>
 
 <style lang="less">
